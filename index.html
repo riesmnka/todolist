@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>to do list</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📝 To-Do List</h1>
+       
+    <form id="todolistForm">
+    <input type="text" id="teks" placeholder="Tulis sesuatu..." required>
+    <button type="submit" id="button">Simpan</button>
+    </form>
+
+    <ul id="list">
+        <li class="empty-message">Belum ada item</li>
+    </ul>
+
+    <script>
+        const form = document.getElementById("todolistForm");
+        const teks = document.getElementById("teks");
+        const button = document.getElementById("button");
+        const list = document.getElementById("list");
+        let itemEdit = null;
+
+        form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const teksv = teks.value.trim();
+
+
+            // hapus tulisan "belum ada item" jika ada
+                const emptyMessage = list.querySelector(".empty-message");
+                if (emptyMessage) {
+                    list.removeChild(emptyMessage);
+                }
+
+            // edit
+                if (itemEdit) {
+                    const span = itemEdit.querySelector("span");
+                    span.textContent = teksv;
+                    itemEdit = null;
+                    button.style.backgroundColor = "";
+                    button.style.color = "";
+                } else {
+            // tambah item baru
+                    const li = document.createElement("li");
+                    const spanText = document.createElement("span");
+                    spanText.textContent = teksv;
+                    li.appendChild(spanText);
+
+                    const btnEdit = document.createElement("button");
+                    btnEdit.classList.add("btnedit");
+                    btnEdit.textContent = "Edit";
+                    btnEdit.addEventListener("click", function() {
+                        teks.value = spanText.textContent;
+                        button.style.color = "";
+                        button.style.backgroundColor = "";
+                        button.textContent = "Simpan";
+                        itemEdit = li;
+                    });
+
+                // hapus
+                    const btnDelete = document.createElement("button");
+                    btnDelete.textContent = "Hapus";
+                    btnDelete.addEventListener("click", function () {
+                        list.removeChild(li);
+
+                // jika list kosong tampilkan "belum ada item"
+                    if (list.children.length === 0) {
+                        const empty = document.createElement("li");
+                        empty.className = "empty-message";
+                        empty.textContent = "Belum ada item";
+                        list.appendChild(empty);
+                    }
+                    });
+
+                    li.appendChild(btnEdit);
+                    li.appendChild(btnDelete);
+
+                    list.appendChild(li);
+                }
+                    teks.value = "";
+                });
+</script>
+
+</body>
+</html>
